@@ -110,11 +110,8 @@ sudo apt upgrade -y > /dev/null 2>&1
 echo -en "\n" ; echo "  # # Установка необходимых стандартных зависимостей..."
 sudo apt install -y git pkg-config autoconf automake libtool libx264-dev > /dev/null 2>&1
 
-echo -en "\n" ; echo "  # # Установка необходимых дополнительных зависимостей..."
+echo -en "\n" ; echo "  # # Установка дополнительных зависимостей..."
 sudo apt -y install build-essential cmake doxygen graphviz imagemagick libasound2-dev libass-dev libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev libfreetype6-dev libgmp-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librtmp-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev libsdl2-ttf-dev libsnappy-dev libsoxr-dev libssh-dev libssl-dev libv4l-dev libva-dev libvdpau-dev libvo-amrwbenc-dev libvorbis-dev libwebp-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev libxcb1-dev libxml2-dev lzma-dev meson nasm python3-dev python3-pip texinfo wget yasm zlib1g-dev libdrm-dev > /dev/null 2>&1
-
-
-#echo -en "\n" ; echo "  # # Устранение ранее известных проблем..."
 
 echo -en "\n" ; echo "  # # Установка пакета AAC..."
 git clone https://github.com/mstorsjo/fdk-aac.git > /dev/null 2>&1
@@ -127,7 +124,6 @@ sudo ldconfig > /dev/null 2>&1
 cd ~
 
 
-
 echo -en "\n" ; echo "  # # Установка пакета FFMPEG..."
 git clone https://github.com/FFmpeg/FFmpeg.git > /dev/null 2>&1
 cd ~/FFmpeg
@@ -135,6 +131,7 @@ cd ~/FFmpeg
 make -j4
 sudo make install
 cd ~
+
 
 echo -en "\n" ; echo "  # # Установка плагина для homebridge..."
 sudo hb-service add homebridge-camera-ffmpeg@latest > /dev/null 2>&1
