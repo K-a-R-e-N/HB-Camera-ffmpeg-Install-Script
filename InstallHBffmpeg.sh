@@ -8,7 +8,7 @@ function Zagolovok {
 echo -en "${yellow} \n"
 echo "╔═════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                             ║"
-echo "║                   $ZI HB-Camera-ffmpeg и его зависимостей.                  ║"
+echo "║                $ZI HB-Camera-ffmpeg и его зависимостей.               ║"
 echo "║                                                                             ║"
 echo "╚═════════════════════════════════════════════════════════════════════════════╝"
 echo -en "\n ${reset}"
@@ -107,17 +107,14 @@ sudo rm -Rf /var/lib/apt/lists/*
 sudo apt update -y > /dev/null 2>&1
 sudo apt upgrade -y > /dev/null 2>&1
 
-echo -en "\n" ; echo "  # # Установка пакетов git pkg-config autoconf automake libtool libx264-dev..."
+echo -en "\n" ; echo "  # # Установка необходимых зависимостей..."
 sudo apt install -y git pkg-config autoconf automake libtool libx264-dev > /dev/null 2>&1
 
 
-#echo -en "\n" ; echo "  # # Установка необходимых зависимостей"
 #echo -en "\n" ; echo "  # # Устранение ранее известных проблем..."
 
-
 echo -en "\n" ; echo "  # # Установка пакета AAC..."
-cd ~
-git clone https://github.com/mstorsjo/fdk-aac.git
+git clone https://github.com/mstorsjo/fdk-aac.git > /dev/null 2>&1
 cd ~/fdk-aac
 ./autogen.sh > /dev/null 2>&1
 ./configure --prefix=/usr/local --enable-shared --enable-static > /dev/null 2>&1
@@ -125,21 +122,24 @@ make -j4 > /dev/null 2>&1
 sudo make install > /dev/null 2>&1
 sudo ldconfig > /dev/null 2>&1
 cd ~
-#Удаление директории ~/fdk-aac
-sudo rm -rf ~/fdk-aac > /dev/null 2>&1
+
+
 
 echo -en "\n" ; echo "  # # Установка пакета FFMPEG..."
-git clone https://github.com/FFmpeg/FFmpeg.git
+git clone https://github.com/FFmpeg/FFmpeg.git > /dev/null 2>&1
 cd ~/FFmpeg
 ./configure --prefix=/usr/local --arch=armel --target-os=linux --enable-omx-rpi --enable-nonfree --enable-gpl --enable-libfdk-aac --enable-mmal --enable-libx264 --enable-decoder=h264 --enable-network --enable-protocol=tcp --enable-demuxer=rtsp
 make -j4
 sudo make install
 cd ~
-#Удаление директории ~/FFmpeg
-sudo rm -rf ~/FFmpeg > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Установка плагина для homebridge..."
 sudo hb-service add homebridge-camera-ffmpeg@latest > /dev/null 2>&1
+
+echo -en "\n" ; echo "  # # Очистка системы..."
+#Удаление директории fdk-aac и FFmpeg
+sudo rm -rf ~/fdk-aac > /dev/null 2>&1
+sudo rm -rf ~/FFmpeg > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Перезапуск homebridge..."
 sudo hb-service restart > /dev/null 2>&1
