@@ -103,12 +103,12 @@ ZI="Установка" && Zagolovok
 
 
 echo -en "\n" ; echo "  # # Обновление кеша данных и индексов репозиторий..."
-sudo rm -Rf /var/lib/apt/lists
+sudo rm -Rf /var/lib/apt/lists/*
 sudo apt update -y > /dev/null 2>&1
 sudo apt upgrade -y > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Установка пакетов git pkg-config autoconf automake libtool libx264-dev..."
-sudo apt install -y git pkg-config autoconf automake libtool libx264-dev > /dev/null
+sudo apt install -y git pkg-config autoconf automake libtool libx264-dev > /dev/null 2>&1
 
 
 #echo -en "\n" ; echo "  # # Установка необходимых зависимостей"
@@ -119,12 +119,14 @@ echo -en "\n" ; echo "  # # Установка пакета AAC..."
 cd ~
 git clone https://github.com/mstorsjo/fdk-aac.git
 cd ~/fdk-aac
-./autogen.sh
-./configure --prefix=/usr/local --enable-shared --enable-static
-make -j4
-sudo make install
-sudo ldconfig
+./autogen.sh > /dev/null 2>&1
+./configure --prefix=/usr/local --enable-shared --enable-static > /dev/null 2>&1
+make -j4 > /dev/null 2>&1
+sudo make install > /dev/null 2>&1
+sudo ldconfig > /dev/null 2>&1
 cd ~
+#Удаление директории ~/fdk-aac
+sudo rm -rf ~/fdk-aac > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Установка пакета FFMPEG..."
 git clone https://github.com/FFmpeg/FFmpeg.git
@@ -132,18 +134,21 @@ cd ~/FFmpeg
 ./configure --prefix=/usr/local --arch=armel --target-os=linux --enable-omx-rpi --enable-nonfree --enable-gpl --enable-libfdk-aac --enable-mmal --enable-libx264 --enable-decoder=h264 --enable-network --enable-protocol=tcp --enable-demuxer=rtsp
 make -j4
 sudo make install
+cd ~
+#Удаление директории ~/FFmpeg
+sudo rm -rf ~/FFmpeg > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Установка плагина для homebridge..."
-sudo hb-service add homebridge-camera-ffmpeg@latest
+sudo hb-service add homebridge-camera-ffmpeg@latest > /dev/null 2>&1
 
 echo -en "\n" ; echo "  # # Перезапуск homebridge..."
-sudo hb-service restart
+sudo hb-service restart > /dev/null 2>&1
 
 
 echo -en "\n"
 echo -en "\n"
 echo "╔═════════════════════════════════════════════════════════════════════════════╗"
-echo "║              ${green}Установки HB-Camera-ffmpeg и его зависимостей завершена${reset}              ║"
+echo "║           ${green}Установки HB-Camera-ffmpeg и его зависимостей завершена${reset}           ║"
 echo "╚═════════════════════════════════════════════════════════════════════════════╝"
 echo -e "\a"
 
@@ -210,8 +215,15 @@ GoToMenu
 
 
 function RremovalItself() {
-echo -en "\n" ; echo "                   Самоудаление папки со скриптом установки...  " ; cd
+
+#Удаление директории ~/fdk-aac
+sudo rm -rf ~/fdk-aac
+#Удаление директории ~/FFmpeg
+sudo rm -rf ~/FFmpeg
+
+echo -en "\n" ; echo "                   Самоудаление папки со скриптом установки...  " ; cd ~
 sudo rm -rf ~/HB-Camera-ffmpeg-Install-Script
+
 if [ $? -eq 0 ]; then
 	echo "                ${green}[Успешно удалено]${reset} - ${red}Завершение работы скрипта...${reset}" ; echo -en "\n"
 else
