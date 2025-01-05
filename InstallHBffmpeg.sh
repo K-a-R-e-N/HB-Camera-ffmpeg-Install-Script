@@ -287,3 +287,5 @@ done
 shift $(($OPTIND - 1))
 
 exit 0
+
+# https://github.com/homebridge/ffmpeg-for-homebridge#readme
